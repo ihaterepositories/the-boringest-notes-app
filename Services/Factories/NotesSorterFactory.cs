@@ -11,7 +11,6 @@ public static class NotesSorterFactory
 
         return sortType switch
         {
-            NotesSortType.Status => notes => ascending ? notes.OrderBy(n => n.IsDone).ToList() : notes.OrderByDescending(n => n.IsDone).ToList(),
             NotesSortType.CreatedAt => notes => ascending ? notes.OrderBy(n => n.CreatedAt).ToList() : notes.OrderByDescending(n => n.CreatedAt).ToList(),
             NotesSortType.UpdatedAt => notes => ascending ? notes.OrderBy(n => n.UpdatedAt).ToList() : notes.OrderByDescending(n => n.UpdatedAt).ToList(),
             _ => throw new ArgumentException($"Unknown sort type: {sortType}")

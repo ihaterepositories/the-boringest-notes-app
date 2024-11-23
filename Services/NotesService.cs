@@ -32,13 +32,13 @@ public class NotesService(INotesRepository notesRepository)
     
     public void Add(Note note)
     {
-        _noteValidator.Validate(note);
+        if (!_noteValidator.Validate(note)) return;
         notesRepository.Add(note);
     }
     
     public void Update(Note note)
     {
-        _noteValidator.Validate(note);
+        if (!_noteValidator.Validate(note)) return;
         notesRepository.Update(note);
     }
     

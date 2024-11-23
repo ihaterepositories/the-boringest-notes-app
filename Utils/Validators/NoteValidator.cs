@@ -10,7 +10,7 @@ public class NoteValidator
     {
         if (string.IsNullOrWhiteSpace(note.Content))
         {
-            _logger.LogError("Note validation failed, title or content is empty");
+            _logger.LogError("Note validation failed, content is empty");
             return false;
         }
         

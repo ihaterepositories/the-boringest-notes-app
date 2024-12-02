@@ -1,24 +1,24 @@
 using System.Text.Json;
 using TheMostBoringNotesApp.Models;
-using TheMostBoringNotesApp.Utils;
+using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
 
 namespace TheMostBoringNotesApp.Repositories.Interfaces;
 
 public abstract class LocalGenericRepository<T> where T : BaseModel
 {
     private readonly string _localStoragePath;
-    private readonly Logger _logger;
+    private readonly INotificator _notificator;
     private readonly string _repositoryObjectName;
     
     private readonly List<T> _entities;
 
     protected LocalGenericRepository(
         string localStoragePath, 
-        string loggerName,
+        INotificator notificator,
         string repositoryObjectName)
     {
         _localStoragePath = localStoragePath;
-        _logger = new Logger(loggerName);
+        _notificator = notificator;
         _repositoryObjectName = repositoryObjectName;
         
         _entities = LoadEntitiesFromFile();
@@ -27,7 +27,7 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
     public List<T> GetAll()
     {
         if (_entities.Count == 0)
-            _logger.LogWarning($"No {_repositoryObjectName} found");
+            _notificator.NotifyWarning($"No {_repositoryObjectName} found");
         
         return _entities;
     }
@@ -38,7 +38,7 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
         
         if (entity == null)
         {
-            _logger.LogWarning($"{_repositoryObjectName} with id {id} not found");
+            _notificator.NotifyWarning($"{_repositoryObjectName} with id {id} not found");
         }
         
         return entity;
@@ -56,7 +56,7 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
         
         if (existingEntity == null)
         {
-            _logger.LogWarning($"Can`t update {_repositoryObjectName} with id {entity.Id}, {_repositoryObjectName} not found");
+            _notificator.NotifyWarning($"Can`t update {_repositoryObjectName} with id {entity.Id}, {_repositoryObjectName} not found");
             return;
         }
         
@@ -71,7 +71,7 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
         
         if (entity == null)
         {
-            _logger.LogWarning($"Can`t delete {_repositoryObjectName} with id {id}, {_repositoryObjectName} not found");
+            _notificator.NotifyWarning($"Can`t delete {_repositoryObjectName} with id {id}, {_repositoryObjectName} not found");
             return;
         }
         
@@ -83,11 +83,12 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
     {
         if (!File.Exists(_localStoragePath))
         {
-            _logger.LogWarning($"Can`t load {_repositoryObjectName}s, file not found at {_localStoragePath}");
+            _notificator.NotifyWarning($"Can`t load {_repositoryObjectName}s, file not found at {_localStoragePath}");
             return [];
         }
 
         var json = File.ReadAllText(_localStoragePath);
+        _notificator.Notify($"{_repositoryObjectName}s loaded");
         return JsonSerializer.Deserialize<List<T>>(json) ?? [];
     }
 
@@ -97,10 +98,11 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
         {
             var json = JsonSerializer.Serialize(_entities);
             File.WriteAllText(_localStoragePath, json);
+            _notificator.Notify($"{_repositoryObjectName}s saved");
         }
         catch (Exception e)
         {
-            _logger.LogError($"Can`t save {_repositoryObjectName}s to file: {e.Message}");
+            _notificator.NotifyError($"Can`t save {_repositoryObjectName}s to file: {e.Message}");
         }
     }
 }

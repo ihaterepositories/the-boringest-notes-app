@@ -2,7 +2,7 @@ using Task = TheMostBoringNotesApp.Models.Task;
 
 namespace TheMostBoringNotesApp.Repositories.Interfaces;
 
-public interface ITasksRepository
+public interface ITaskRepository
 {
     public List<Task> GetAll();
     public Task GetById(Guid id);

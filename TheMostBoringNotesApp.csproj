@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <Compile Remove="Utils\TextSnippets\**" />
+      <Compile Remove="View\ViewCores\Console\Snippets\TextSnippets.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,6 +23,10 @@
     <ItemGroup>
       <None Remove="Utils\TextSnippets\**" />
       <None Remove="appsettings.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="View\ViewCores\" />
     </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 namespace TheMostBoringNotesApp.Services.Enums;
 
-public enum TasksSortType
+public enum TaskSortType
 {
-    Status,
+    Content,
     CreatedAt,
     UpdatedAt
 }

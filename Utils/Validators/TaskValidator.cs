@@ -1,5 +1,4 @@
-using TheMostBoringNotesApp.Utils.Notifiers;
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
 using Task = TheMostBoringNotesApp.Models.Task;
 
 namespace TheMostBoringNotesApp.Utils.Validators;

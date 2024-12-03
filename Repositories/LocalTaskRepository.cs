@@ -1,6 +1,6 @@
 using System.Text.Json;
 using TheMostBoringNotesApp.Repositories.Interfaces;
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
 using Task = TheMostBoringNotesApp.Models.Task;
 
 namespace TheMostBoringNotesApp.Repositories;

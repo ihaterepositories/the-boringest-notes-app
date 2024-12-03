@@ -1,4 +1,4 @@
-namespace TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
+namespace TheMostBoringNotesApp.View.Notifiers.Interfaces;
 
 public interface INotificator
 {

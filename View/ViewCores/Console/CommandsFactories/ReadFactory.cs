@@ -1,45 +1,27 @@
 using TheMostBoringNotesApp.Services;
 using TheMostBoringNotesApp.Services.Enums;
-using TheMostBoringNotesApp.Utils.Notifiers;
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
 using TheMostBoringNotesApp.View.ViewCores.Console.Snippets;
 
-namespace TheMostBoringNotesApp.View.ViewCores.Console.CommandFactories;
+namespace TheMostBoringNotesApp.View.ViewCores.Console.CommandsFactories;
 
-public class TaskCommandsExecuteFactory
+public class ReadFactory
 {
     private readonly TaskService _taskService;
     private readonly OutputSnippetsHolder _outputSnippetsHolder;
     private readonly INotificator _notificator;
     
-    public TaskCommandsExecuteFactory(TaskService taskService, OutputSnippetsHolder outputSnippetsHolder, INotificator notificator)
+    public ReadFactory(
+        TaskService taskService, 
+        OutputSnippetsHolder outputSnippetsHolder, 
+        INotificator notificator)
     {
         _taskService = taskService;
         _outputSnippetsHolder = outputSnippetsHolder;
         _notificator = notificator;
     }
     
-    public void Execute(string command, string[] args)
-    {
-        switch (command)
-        {
-            case "create": Create(); break;
-            case "read": Read(args); break;
-            case "update": Update(args); break;
-            case "delete": Delete(args); break;
-            default:
-                _outputSnippetsHolder.ShowUnknownCommandMessage();
-                break;
-        }
-    }
-    
-    private void Create()
-    {
-        var content = _outputSnippetsHolder.GetUserInput("Content: ");
-        _taskService.Add(content);
-    }
-
-    private void Read(string[] args)
+    public void Read(string[] args)
     {
         if (args.Length == 0)
         {
@@ -58,78 +40,6 @@ public class TaskCommandsExecuteFactory
         }
     }
     
-    private void Update(string[] args)
-    {
-        if (args.Length < 2)
-        {
-            _notificator.NotifyWarning("Provide task id and content");
-            return;
-        }
-        
-        if (int.TryParse(args[0], out int id))
-        {
-            _taskService.UpdateContent(id, args[1]);
-        }
-        else
-        {
-            _notificator.NotifyWarning("Provide valid task id");
-        }
-    }
-    
-    private void Delete(string[] args)
-    {
-        if (args.Length == 0)
-        {
-            _notificator.NotifyWarning("Provide command argument");
-            return;
-        }
-        
-        if (int.TryParse(args[0], out int id))
-        {
-            _taskService.Delete(id);
-        }
-        else
-        {
-            switch (args[0])
-            {
-                case "all":
-                    if (_outputSnippetsHolder.ConfirmAction("delete all tasks"))
-                    {
-                        _taskService.DeleteAll();
-                    }
-                    break;
-            }
-        }
-    }
-    
-    private void Mark(string[] args)
-    {
-        if (args.Length == 0)
-        {
-            _notificator.NotifyWarning("Provide task id");
-            return;
-        }
-        
-        if (int.TryParse(args[0], out int id))
-        {
-            var response = _taskService.GetById(id);
-            
-            if (!response.IsSuccess)
-            {
-                _notificator.NotifyWarning(response.Message);
-                return;
-            }
-            
-            var task = response.Data!;
-            task.ChangeStatus();
-            _notificator.Notify("Task marked as "+ (task.IsDone ? "done" : "undone"));
-        }
-        else
-        {
-            _notificator.NotifyWarning("Provide valid task id");
-        }
-    }
-
     private void ReadByDate(string arg)
     {
         switch (arg)

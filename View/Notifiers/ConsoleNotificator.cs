@@ -1,6 +1,6 @@
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
 
-namespace TheMostBoringNotesApp.Utils.Notifiers;
+namespace TheMostBoringNotesApp.View.Notifiers;
 
 public class ConsoleNotificator : INotificator
 {

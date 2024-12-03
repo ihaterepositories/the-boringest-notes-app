@@ -1,12 +1,11 @@
 ﻿using TheMostBoringNotesApp.Repositories;
 using TheMostBoringNotesApp.Repositories.Interfaces;
 using TheMostBoringNotesApp.Services;
-using TheMostBoringNotesApp.Utils.Notifiers;
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
 using TheMostBoringNotesApp.Utils.Validators;
 using TheMostBoringNotesApp.View.Interfaces;
+using TheMostBoringNotesApp.View.Notifiers;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
 using TheMostBoringNotesApp.View.ViewCores.Console;
-using TheMostBoringNotesApp.View.ViewCores.Console.CommandFactories;
 
 string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 string appFolder = Path.Combine(appDataPath, "TheMostBoringTodoApp");

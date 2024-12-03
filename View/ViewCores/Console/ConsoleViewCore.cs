@@ -1,24 +1,28 @@
 using TheMostBoringNotesApp.Services;
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
 using TheMostBoringNotesApp.View.Interfaces;
-using TheMostBoringNotesApp.View.ViewCores.Console.CommandFactories;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
+using TheMostBoringNotesApp.View.ViewCores.Console.CommandsFactories;
 using TheMostBoringNotesApp.View.ViewCores.Console.Snippets;
 
 namespace TheMostBoringNotesApp.View.ViewCores.Console;
 
 public class ConsoleViewCore : IViewCore
 {
-    private readonly TaskCommandsExecuteFactory _taskCommandsExecuteFactory;
     private readonly OutputSnippetsHolder _outputSnippetsHolder;
+    
+    private readonly CreateFactory _createFactory;
+    private readonly ReadFactory _readFactory;
+    private readonly UpdateFactory _updateFactory;
+    private readonly DeleteFactory _deleteFactory;
     
     public ConsoleViewCore(TaskService taskService, INotificator notificator)
     {
         _outputSnippetsHolder = new OutputSnippetsHolder(notificator);
-        _taskCommandsExecuteFactory = new TaskCommandsExecuteFactory(
-            taskService, 
-            _outputSnippetsHolder,
-            notificator
-            );
+        
+        _readFactory = new ReadFactory(taskService, _outputSnippetsHolder, notificator);
+        _createFactory = new CreateFactory(taskService, _outputSnippetsHolder);
+        _updateFactory = new UpdateFactory(taskService, notificator);
+        _deleteFactory = new DeleteFactory(taskService, _outputSnippetsHolder, notificator);
     }
     
     public void Run()
@@ -32,9 +36,24 @@ public class ConsoleViewCore : IViewCore
             string command = inputParts[0];
             string[] args = inputParts.Skip(1).ToArray();
             
-            _taskCommandsExecuteFactory.Execute(command, args);
+            ExecuteCommand(command, args);
             
             input = _outputSnippetsHolder.GetUserInput();
+        }
+    }
+    
+    private void ExecuteCommand(string command, string[] args)
+    {
+        switch (command)
+        {
+            case "create": _createFactory.Create(); break;
+            case "read": _readFactory.Read(args); break;
+            case "update": _updateFactory.Update(args); break;
+            case "mark": _updateFactory.Mark(args); break;
+            case "delete": _deleteFactory.Delete(args); break;
+            default:
+                _outputSnippetsHolder.ShowUnknownCommandMessage();
+                break;
         }
     }
 }

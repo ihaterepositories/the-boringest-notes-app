@@ -1,5 +1,5 @@
 using ConsoleTables;
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
 using Task = TheMostBoringNotesApp.Models.Task;
 
 namespace TheMostBoringNotesApp.View.ViewCores.Console.Snippets;

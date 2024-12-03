@@ -3,8 +3,8 @@ using TheMostBoringNotesApp.Services.Enums;
 using TheMostBoringNotesApp.Services.Factories;
 using TheMostBoringNotesApp.Services.Responding;
 using TheMostBoringNotesApp.Services.Responding.Models;
-using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
 using TheMostBoringNotesApp.Utils.Validators;
+using TheMostBoringNotesApp.View.Notifiers.Interfaces;
 using Task = TheMostBoringNotesApp.Models.Task;
 
 namespace TheMostBoringNotesApp.Services;

@@ -101,6 +101,34 @@ public class TaskCommandsExecuteFactory
             }
         }
     }
+    
+    private void Mark(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            _notificator.NotifyWarning("Provide task id");
+            return;
+        }
+        
+        if (int.TryParse(args[0], out int id))
+        {
+            var response = _taskService.GetById(id);
+            
+            if (!response.IsSuccess)
+            {
+                _notificator.NotifyWarning(response.Message);
+                return;
+            }
+            
+            var task = response.Data!;
+            task.ChangeStatus();
+            _notificator.Notify("Task marked as "+ (task.IsDone ? "done" : "undone"));
+        }
+        else
+        {
+            _notificator.NotifyWarning("Provide valid task id");
+        }
+    }
 
     private void ReadByDate(string arg)
     {

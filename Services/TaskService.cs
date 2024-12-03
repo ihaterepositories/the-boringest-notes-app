@@ -1,6 +1,8 @@
 using TheMostBoringNotesApp.Repositories.Interfaces;
 using TheMostBoringNotesApp.Services.Enums;
 using TheMostBoringNotesApp.Services.Factories;
+using TheMostBoringNotesApp.Services.Responding;
+using TheMostBoringNotesApp.Services.Responding.Models;
 using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
 using TheMostBoringNotesApp.Utils.Validators;
 using Task = TheMostBoringNotesApp.Models.Task;
@@ -12,6 +14,7 @@ public class TaskService
     private readonly ITaskRepository _taskRepository;
     private readonly TaskValidator _taskValidator;
     private readonly INotificator _notificator;
+    private readonly ResponseCreator _responseCreator;
     
     public TaskService(
         ITaskRepository taskRepository, 
@@ -21,6 +24,8 @@ public class TaskService
         _taskRepository = taskRepository;
         _taskValidator = taskValidator;
         _notificator = notificator;
+        
+        _responseCreator = new ResponseCreator();
     }
     
     public List<Task> GetByDate(TaskGetByDateOption dateOption)
@@ -37,9 +42,14 @@ public class TaskService
         return limit == 0 ? sorter(tasks) : sorter(tasks).Take(limit).ToList();
     }
     
-    public Task GetById(int id)
+    public ServiceResponse<Task> GetById(int id)
     {
-        return _taskRepository.GetById(id);
+        var task = _taskRepository.GetById(id);
+        
+        if (task == Task.Empty)
+            return _responseCreator.CreateError<Task>($"Task {id} not found");
+        
+        return _responseCreator.CreateOk(task);
     }
     
     public void Add(string content)

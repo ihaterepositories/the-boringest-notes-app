@@ -1,8 +1,8 @@
 using TheMostBoringNotesApp.Services;
 using TheMostBoringNotesApp.View.Notifiers.Interfaces;
-using TheMostBoringNotesApp.View.ViewCores.Console.Snippets;
+using TheMostBoringNotesApp.View.ViewCores.TextInterfaces.Snippets;
 
-namespace TheMostBoringNotesApp.View.ViewCores.Console.CommandsFactories;
+namespace TheMostBoringNotesApp.View.ViewCores.TextInterfaces.CommandsFactories;
 
 public class DeleteFactory
 {

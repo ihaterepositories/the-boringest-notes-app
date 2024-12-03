@@ -28,17 +28,18 @@ public class TaskService
         _responseCreator = new ResponseCreator();
     }
     
-    public List<Task> GetByDate(TaskGetByDateOption dateOption)
+    public List<Task> GetAll(TaskGetByDateOption dateOption)
     {
         var tasks = _taskRepository.GetAll();
         var dateFilter = TaskGetByDateFactory.GetByDate(dateOption);
-        return dateFilter(tasks);
+        var sorter = TaskSorterFactory.GetSorter(TaskSortType.CreatedAt, -1);
+        return sorter(dateFilter(tasks));
     }
     
     public List<Task> GetAll(TaskSortType sortType, int sortOrder, int limit = 0)
     {
         var tasks = _taskRepository.GetAll();
-        var sorter = TaskSorterFactory.GetSorter(sortType, 1);
+        var sorter = TaskSorterFactory.GetSorter(sortType, sortOrder);
         return limit == 0 ? sorter(tasks) : sorter(tasks).Take(limit).ToList();
     }
     

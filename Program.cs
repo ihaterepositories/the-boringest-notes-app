@@ -5,7 +5,7 @@ using TheMostBoringNotesApp.Utils.Validators;
 using TheMostBoringNotesApp.View.Interfaces;
 using TheMostBoringNotesApp.View.Notifiers;
 using TheMostBoringNotesApp.View.Notifiers.Interfaces;
-using TheMostBoringNotesApp.View.ViewCores.Console;
+using TheMostBoringNotesApp.View.ViewCores.TextInterfaces;
 
 string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 string appFolder = Path.Combine(appDataPath, "TheMostBoringTodoApp");

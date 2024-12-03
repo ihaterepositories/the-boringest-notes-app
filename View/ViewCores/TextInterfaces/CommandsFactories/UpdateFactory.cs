@@ -1,32 +1,38 @@
 using TheMostBoringNotesApp.Services;
 using TheMostBoringNotesApp.View.Notifiers.Interfaces;
+using TheMostBoringNotesApp.View.ViewCores.TextInterfaces.Snippets;
 
-namespace TheMostBoringNotesApp.View.ViewCores.Console.CommandsFactories;
+namespace TheMostBoringNotesApp.View.ViewCores.TextInterfaces.CommandsFactories;
 
 public class UpdateFactory
 {
     private readonly TaskService _taskService;
     private readonly INotificator _notificator;
+    private readonly OutputSnippetsHolder _outputSnippetsHolder;
     
     public UpdateFactory(
-        TaskService taskService, 
+        TaskService taskService,
+        OutputSnippetsHolder outputSnippetsHolder,
         INotificator notificator)
     {
         _taskService = taskService;
+        _outputSnippetsHolder = outputSnippetsHolder;
         _notificator = notificator;
     }
     
     public void Update(string[] args)
     {
-        if (args.Length < 2)
+        if (args.Length == 0)
         {
-            _notificator.NotifyWarning("Provide task id and content");
+            _notificator.NotifyWarning("Provide task id");
             return;
         }
         
         if (int.TryParse(args[0], out int id))
         {
-            _taskService.UpdateContent(id, args[1]);
+            
+            var content = _outputSnippetsHolder.GetUserInput("New content:");
+            _taskService.UpdateContent(id, content);
         }
         else
         {

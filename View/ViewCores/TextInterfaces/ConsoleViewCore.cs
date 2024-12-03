@@ -1,10 +1,10 @@
 using TheMostBoringNotesApp.Services;
 using TheMostBoringNotesApp.View.Interfaces;
 using TheMostBoringNotesApp.View.Notifiers.Interfaces;
-using TheMostBoringNotesApp.View.ViewCores.Console.CommandsFactories;
-using TheMostBoringNotesApp.View.ViewCores.Console.Snippets;
+using TheMostBoringNotesApp.View.ViewCores.TextInterfaces.CommandsFactories;
+using TheMostBoringNotesApp.View.ViewCores.TextInterfaces.Snippets;
 
-namespace TheMostBoringNotesApp.View.ViewCores.Console;
+namespace TheMostBoringNotesApp.View.ViewCores.TextInterfaces;
 
 public class ConsoleViewCore : IViewCore
 {
@@ -14,6 +14,8 @@ public class ConsoleViewCore : IViewCore
     private readonly ReadFactory _readFactory;
     private readonly UpdateFactory _updateFactory;
     private readonly DeleteFactory _deleteFactory;
+
+    private readonly SupportCommandsText _supportCommandsText;
     
     public ConsoleViewCore(TaskService taskService, INotificator notificator)
     {
@@ -21,7 +23,7 @@ public class ConsoleViewCore : IViewCore
         
         _readFactory = new ReadFactory(taskService, _outputSnippetsHolder, notificator);
         _createFactory = new CreateFactory(taskService, _outputSnippetsHolder);
-        _updateFactory = new UpdateFactory(taskService, notificator);
+        _updateFactory = new UpdateFactory(taskService, _outputSnippetsHolder, notificator);
         _deleteFactory = new DeleteFactory(taskService, _outputSnippetsHolder, notificator);
     }
     
@@ -51,6 +53,7 @@ public class ConsoleViewCore : IViewCore
             case "update": _updateFactory.Update(args); break;
             case "mark": _updateFactory.Mark(args); break;
             case "delete": _deleteFactory.Delete(args); break;
+            case "help": Console.WriteLine(_supportCommandsText.CommandsTextList); break;
             default:
                 _outputSnippetsHolder.ShowUnknownCommandMessage();
                 break;

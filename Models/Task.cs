@@ -1,6 +1,6 @@
 namespace TheMostBoringNotesApp.Models;
 
-public class Task(string content) : BaseModel(content)
+public class Task(int id, string content) : BaseModel(id, content)
 {
     public bool IsDone { get; set; } = false;
     

@@ -24,59 +24,51 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
         _entities = LoadEntitiesFromFile();
     }
     
+    public int GetNextId()
+    {
+        return _entities.Count == 0 ? 1 : _entities.Max(n => n.Id) + 1;
+    }
+    
+    public bool IsIdExists(int id)
+    {
+        return _entities.Any(n => n.Id == id);
+    }
+    
     public List<T> GetAll()
     {
-        if (_entities.Count == 0)
-            _notificator.NotifyWarning($"No {_repositoryObjectName} found");
-        
         return _entities;
     }
 
-    public T GetById(Guid id)
+    public T? GetById(int id)
     {
-        var entity = _entities.FirstOrDefault(n => n.Id == id);
-        
-        if (entity == null)
-        {
-            _notificator.NotifyWarning($"{_repositoryObjectName} with id {id} not found");
-        }
-        
-        return entity;
+        return _entities.FirstOrDefault(e => e.Id == id);
     }
 
     public void Add(T entity)
     {
         _entities.Add(entity);
-        SaveNotesToFile();
+        SaveEntitiesToFile();
     }
 
     public void Update(T entity)
     {
-        var existingEntity = _entities.FirstOrDefault(n => n.Id == entity.Id);
+        _entities
+            .FirstOrDefault(n => n.Id == entity.Id)!
+            .Update(entity.Content);
         
-        if (existingEntity == null)
-        {
-            _notificator.NotifyWarning($"Can`t update {_repositoryObjectName} with id {entity.Id}, {_repositoryObjectName} not found");
-            return;
-        }
-        
-        existingEntity.Update(entity.Content);
-        
-        SaveNotesToFile();
+        SaveEntitiesToFile();
     }
 
-    public void Delete(Guid id)
+    public void Delete(int id)
     {
-        var entity = _entities.FirstOrDefault(n => n.Id == id);
-        
-        if (entity == null)
-        {
-            _notificator.NotifyWarning($"Can`t delete {_repositoryObjectName} with id {id}, {_repositoryObjectName} not found");
-            return;
-        }
-        
-        _entities.Remove(entity);
-        SaveNotesToFile();
+        _entities.Remove(_entities.FirstOrDefault(e => e.Id == id)!);
+        SaveEntitiesToFile();
+    }
+    
+    public void DeleteAll()
+    {
+        _entities.Clear();
+        SaveEntitiesToFile();
     }
     
     private List<T> LoadEntitiesFromFile()
@@ -88,17 +80,15 @@ public abstract class LocalGenericRepository<T> where T : BaseModel
         }
 
         var json = File.ReadAllText(_localStoragePath);
-        _notificator.Notify($"{_repositoryObjectName}s loaded");
         return JsonSerializer.Deserialize<List<T>>(json) ?? [];
     }
 
-    private void SaveNotesToFile()
+    private void SaveEntitiesToFile()
     {
         try
         {
             var json = JsonSerializer.Serialize(_entities);
             File.WriteAllText(_localStoragePath, json);
-            _notificator.Notify($"{_repositoryObjectName}s saved");
         }
         catch (Exception e)
         {

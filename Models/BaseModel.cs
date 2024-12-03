@@ -2,14 +2,14 @@ namespace TheMostBoringNotesApp.Models;
 
 public abstract class BaseModel
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Content { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    protected BaseModel(string content)
+    protected BaseModel(int id, string content)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Content = content;
         CreatedAt = DateTime.Now;
         UpdatedAt = DateTime.Now;

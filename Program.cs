@@ -22,7 +22,7 @@ ITaskRepository taskRepository = new LocalTaskRepository(
     consoleNotificator, 
     "task"
 );
-var tasksService = new TaskService(taskRepository, tasksValidator);
+var tasksService = new TaskService(taskRepository, tasksValidator, consoleNotificator);
+var viewCore = new ConsoleViewCore(tasksService, consoleNotificator);
 
-IViewCore viewCore = new ConsoleViewCore(tasksService, consoleNotificator);
 viewCore.Run();

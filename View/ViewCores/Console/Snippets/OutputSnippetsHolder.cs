@@ -1,3 +1,4 @@
+using ConsoleTables;
 using TheMostBoringNotesApp.Utils.Notifiers.Interfaces;
 using Task = TheMostBoringNotesApp.Models.Task;
 
@@ -17,13 +18,13 @@ public class OutputSnippetsHolder
 
     public void ShowWelcomeMessage()
     {
-        System.Console.WriteLine("Welcome to The Most Boring Notes App!");
-        System.Console.WriteLine("Type 'help' to see available commands.");
+        System.Console.WriteLine("/ Welcome to The Most Boring Notes App!");
+        System.Console.WriteLine("/ Type 'help' to see available commands.");
     }
     
     public void ShowUnknownCommandMessage()
-    {
-        System.Console.WriteLine("Unknown command. Type 'help' to see available commands.");
+    { 
+        _notificator.NotifyWarning("Unknown command. Type 'help' to see available commands.");
     }
     
     public string GetUserInput()
@@ -41,7 +42,7 @@ public class OutputSnippetsHolder
     {
         while (true)
         {
-            System.Console.WriteLine(question);
+            System.Console.WriteLine("/ "+question);
             System.Console.Write("> ");
             var input = System.Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(input)) return input;
@@ -51,26 +52,16 @@ public class OutputSnippetsHolder
     
     public bool ConfirmAction(string action)
     {
-        System.Console.WriteLine($"Are you sure you want to {action}? (y/n)");
-        System.Console.Write("> ");
-        var confirmation = System.Console.ReadLine();
-        if (confirmation != "y")
-        {
-            _notificator.Notify("Action cancelled");
-            return false;
-        }
-        return true;
+        System.Console.WriteLine($"/ Are you sure you want to {action}? (y/n)");
+        return GetUserInput() == "y";
     }
     
     public void ShowTasks(List<Task> tasks)
     {
         if (tasks.Count == 0) return;
+        var table = new ConsoleTable("N", "Done", "Content");
         foreach (var task in tasks)
-        {
-            System.Console.WriteLine(Line);
-            System.Console.Write(task.IsDone ? "(*)" : "( )");
-            System.Console.WriteLine(task.Content);
-        }
-        System.Console.WriteLine(Line);
+            table.AddRow(task.Id, task.IsDone ? "*" : " ", task.Content);
+        table.Write();
     }
 }

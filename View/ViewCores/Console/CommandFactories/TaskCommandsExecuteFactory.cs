@@ -25,6 +25,8 @@ public class TaskCommandsExecuteFactory
         {
             case "create": Create(); break;
             case "read": Read(args); break;
+            case "update": Update(args); break;
+            case "delete": Delete(args); break;
             default:
                 _outputSnippetsHolder.ShowUnknownCommandMessage();
                 break;
@@ -47,11 +49,56 @@ public class TaskCommandsExecuteFactory
         
         switch (args[0])
         {
-            case "byDate": ReadByDate(args[1]); break;
-            case "sorted": 
+            case "date": ReadByDate(args[1]); break;
+            case "sort": ReadSorted(args[1]); break;
+            case "all": _taskService.GetAll(TaskSortType.Content, -1); break;
             default:
                 _outputSnippetsHolder.ShowUnknownCommandMessage();
                 break;
+        }
+    }
+    
+    private void Update(string[] args)
+    {
+        if (args.Length < 2)
+        {
+            _notificator.NotifyWarning("Provide task id and content");
+            return;
+        }
+        
+        if (int.TryParse(args[0], out int id))
+        {
+            _taskService.UpdateContent(id, args[1]);
+        }
+        else
+        {
+            _notificator.NotifyWarning("Provide valid task id");
+        }
+    }
+    
+    private void Delete(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            _notificator.NotifyWarning("Provide command argument");
+            return;
+        }
+        
+        if (int.TryParse(args[0], out int id))
+        {
+            _taskService.Delete(id);
+        }
+        else
+        {
+            switch (args[0])
+            {
+                case "all":
+                    if (_outputSnippetsHolder.ConfirmAction("delete all tasks"))
+                    {
+                        _taskService.DeleteAll();
+                    }
+                    break;
+            }
         }
     }
 

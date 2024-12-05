@@ -15,13 +15,12 @@ if (!File.Exists(Path.Combine(appFolder, "tasks.json")))
     File.WriteAllText(Path.Combine(appFolder, "tasks.json"), "[]");
 
 INotificator consoleNotificator = new ConsoleNotificator();
-var tasksValidator = new TaskValidator(consoleNotificator);
 ITaskRepository taskRepository = new LocalTaskRepository(
     appFolder + "/tasks.json", 
     consoleNotificator, 
     "task"
 );
-var tasksService = new TaskService(taskRepository, tasksValidator, consoleNotificator);
+var tasksService = new TaskService(taskRepository);
 var viewCore = new ConsoleViewCore(tasksService, consoleNotificator);
 
 viewCore.Run();

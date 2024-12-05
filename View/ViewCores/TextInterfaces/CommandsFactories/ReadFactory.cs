@@ -31,33 +31,59 @@ public class ReadFactory
         switch (args[0])
         {
             case "all":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskSortType.CreatedAt, -1));
+                ShowTasksFromService(TaskSortType.CreatedAt, -1);
                 break;
             case "today":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.Today));
+                ShowTasksFromService(TaskGetByDateOption.Today);
                 break;
             case "yesterday":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.Yesterday));
+                ShowTasksFromService(TaskGetByDateOption.Yesterday);
                 break;
             case "thisWeek":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.ThisWeek));
+                ShowTasksFromService(TaskGetByDateOption.ThisWeek);
                 break;
             case "lastWeek":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.LastWeek));
+                ShowTasksFromService(TaskGetByDateOption.LastWeek);
                 break;
             case "thisMonth":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.ThisMonth));
+                ShowTasksFromService(TaskGetByDateOption.ThisMonth);
                 break;
             case "lastMonth":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.LastMonth));
+                ShowTasksFromService(TaskGetByDateOption.LastMonth);
                 break;
             case "thisYear":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.ThisYear));
+                ShowTasksFromService(TaskGetByDateOption.ThisYear);
                 break;
             case "lastYear":
-                _outputSnippetsHolder.ShowTasks(_taskService.GetAll(TaskGetByDateOption.LastYear));
+                ShowTasksFromService(TaskGetByDateOption.LastYear);
                 break;
             default: _notificator.NotifyWarning("Wrong argument."); break;
         }
+    }
+    
+    private void ShowTasksFromService(TaskSortType sortOption, int order)
+    {
+        var response = _taskService.GetAll(sortOption, order);
+        
+        if (!response.IsSuccess)
+        {
+            _notificator.NotifyWarning(response.Message);
+            return;
+        }
+        
+        _outputSnippetsHolder.ShowTasks(response.Data!);
+    }
+    
+    private void ShowTasksFromService(TaskGetByDateOption dateOption)
+    {
+        var response = _taskService.GetAll(dateOption);
+        
+        if (!response.IsSuccess)
+        {
+            _notificator.NotifyWarning(response.Message);
+            return;
+        }
+        
+        _outputSnippetsHolder.ShowTasks(response.Data!);
     }
 }

@@ -9,6 +9,7 @@ namespace TheMostBoringNotesApp.View.ViewCores.TextInterfaces;
 public class ConsoleViewCore : IViewCore
 {
     private readonly OutputSnippetsHolder _outputSnippetsHolder;
+    private readonly INotificator _notificator;
     
     private readonly CreateFactory _createFactory;
     private readonly ReadFactory _readFactory;
@@ -19,6 +20,9 @@ public class ConsoleViewCore : IViewCore
     
     public ConsoleViewCore(TaskService taskService, INotificator notificator)
     {
+        _notificator = notificator;
+        
+        _supportCommandsText = new SupportCommandsText();
         _outputSnippetsHolder = new OutputSnippetsHolder(notificator);
         
         _readFactory = new ReadFactory(taskService, _outputSnippetsHolder, notificator);
@@ -46,6 +50,18 @@ public class ConsoleViewCore : IViewCore
     
     private void ExecuteCommand(string command, string[] args)
     {
+        if (string.IsNullOrEmpty(command))
+        {
+            _notificator.NotifyWarning("Provide command.");
+            return;
+        }
+        
+        if (command != "create" && command != "help" && args.Length == 0)
+        {
+            _notificator.NotifyWarning("Provide argument.");
+            return;
+        }
+        
         switch (command)
         {
             case "create": _createFactory.Create(); break;

@@ -14,8 +14,7 @@ public class TodoService
     private readonly TodoValidator _todoValidator;
     private readonly ResponseCreator _responseCreator;
     
-    public TodoService(
-        ITodoRepository todoRepository)
+    public TodoService(ITodoRepository todoRepository)
     {
         _todoRepository = todoRepository;
         
@@ -88,7 +87,7 @@ public class TodoService
         try
         {
             _todoRepository.Add(todo);
-            return _responseCreator.CreateOk(todo);
+            return _responseCreator.CreateOk(todo, "Todo created!");
         }
         catch (Exception e)
         {
@@ -109,7 +108,7 @@ public class TodoService
         try
         {
             _todoRepository.Update(updatedTodo);
-            return _responseCreator.CreateOk(updatedTodo);
+            return _responseCreator.CreateOk(updatedTodo, "Todo updated!");
         }
         catch (Exception e)
         {
@@ -125,7 +124,7 @@ public class TodoService
         try
         {
             _todoRepository.Delete(id);
-            return _responseCreator.CreateOk(id);
+            return _responseCreator.CreateOk(id, "Todo deleted!");
         }
         catch (Exception e)
         {
@@ -138,7 +137,7 @@ public class TodoService
         try
         {
             _todoRepository.DeleteAll();
-            return _responseCreator.CreateOk(string.Empty);
+            return _responseCreator.CreateOk(string.Empty, "All todos deleted!");
         }
         catch (Exception e)
         {

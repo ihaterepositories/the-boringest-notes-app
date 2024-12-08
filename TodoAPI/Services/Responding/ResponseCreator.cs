@@ -13,13 +13,13 @@ public class ResponseCreator
         };
     }
     
-    public ServiceResponse<T> CreateOk<T>(T data)
+    public ServiceResponse<T> CreateOk<T>(T data, string message = "success")
     {
         return new ServiceResponse<T>
         {
             IsSuccess = true,
             Data = data,
-            Message = "success"
+            Message = message
         };
     }
 }
